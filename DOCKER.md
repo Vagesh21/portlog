@@ -1,50 +1,118 @@
 # 🐳 Docker Deployment Guide
 
-Complete guide for running the Cybersecurity Portfolio using Docker on any platform, including Raspberry Pi 4.
+Complete guide for running the Cybersecurity Portfolio using Docker on any platform, including **Raspberry Pi 4**.
 
-## Quick Start with Docker
+## Quick Start
 
 ### Prerequisites
 - Docker Engine 20.10+
-- Docker Compose 2.0+ (or docker-compose 1.29+)
+- Docker Compose 2.0+
 - 2GB+ RAM (4GB recommended for Raspberry Pi)
 
-### 1. Build and Start
+### Step 1: Clone the Repository
 
 ```bash
-# Navigate to project directory
-cd /path/to/portfolio
+git clone https://github.com/Vagesh21/portlog.git
+cd portlog
+```
 
-# Build images (first time only)
+### Step 2: Find Your IP Address
+
+```bash
+# Linux/Raspberry Pi
+hostname -I
+
+# macOS
+ifconfig | grep "inet " | grep -v 127.0.0.1
+
+# Windows
+ipconfig
+```
+
+Note your IP address (e.g., `192.168.1.100` or `192.168.0.2`)
+
+### Step 3: Update docker-compose.yml
+
+Edit `docker-compose.yml` and replace `YOUR_IP_ADDRESS` with your actual IP:
+
+```bash
+# Using nano
+nano docker-compose.yml
+
+# Or using sed (replace 192.168.0.2 with YOUR IP)
+sed -i 's/YOUR_IP_ADDRESS/192.168.0.2/g' docker-compose.yml
+```
+
+Find this line and update it:
+```yaml
+REACT_APP_BACKEND_URL: http://YOUR_IP_ADDRESS:8001
+```
+
+Change to (example):
+```yaml
+REACT_APP_BACKEND_URL: http://192.168.0.2:8001
+```
+
+### Step 4: Build and Start
+
+```bash
+# Build images (first time takes 5-10 minutes on Raspberry Pi)
 docker-compose build
 
 # Start all services
 docker-compose up -d
 
-# Wait for services to be healthy (about 1-2 minutes)
+# Wait for MongoDB to initialize (about 60 seconds)
+sleep 60
+
+# Check all services are healthy
 docker-compose ps
 ```
 
-### 2. Seed the Database (First Time Only)
-
-After all services are running, seed the database with initial content:
+### Step 5: Seed the Database
 
 ```bash
 curl -X POST http://localhost:8001/api/content/seed
 ```
 
-### 3. Access Your Portfolio
+You should see: `{"success":true,"message":"Database seeded with default content"}`
 
-- **Frontend**: http://localhost:3000
-- **Backend API**: http://localhost:8001
-- **API Docs**: http://localhost:8001/docs
-- **Admin Login**: http://localhost:3000/admin-login
-- **Admin Panel**: http://localhost:3000/admin-analytics-dashboard (after login)
+### Step 6: Access Your Portfolio
+
+- **Portfolio**: http://YOUR_IP:3000
+- **Admin Login**: http://YOUR_IP:3000/admin-login
 - **Default Credentials**: `admin` / `password`
-- **MongoDB**: localhost:27017
+- **API Docs**: http://YOUR_IP:8001/docs
 
-### 3. View Logs
+---
 
+## Raspberry Pi 4 Specific Notes
+
+### MongoDB Version
+This setup uses **MongoDB 4.4.18** which is the last version compatible with Raspberry Pi 4's ARMv8.0-A processor. Later versions require ARMv8.2-A.
+
+### Node.js Version
+Uses **Node 22** with `--ignore-engines` flag to handle package compatibility.
+
+### Memory Considerations
+If you experience memory issues:
+
+```bash
+# Add swap space
+sudo fallocate -l 2G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+
+# Make permanent
+echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+```
+
+---
+
+## Common Commands
+
+### View Logs
 ```bash
 # All services
 docker-compose logs -f
@@ -55,495 +123,102 @@ docker-compose logs -f frontend
 docker-compose logs -f mongodb
 ```
 
-### 4. Stop Services
+### Restart Services
+```bash
+docker-compose restart
+```
 
+### Stop Services
 ```bash
 docker-compose down
 
-# Stop and remove volumes (WARNING: This deletes data!)
+# Stop and remove all data
 docker-compose down -v
 ```
 
----
-
-## Raspberry Pi 4 Setup (Kali Linux)
-
-### Option 1: Automated Setup Script
-
+### Rebuild After Changes
 ```bash
-# Run the setup script
-sudo bash setup-raspi.sh
-
-# After setup completes
-docker-compose up -d
-```
-
-### Option 2: Manual Setup
-
-#### Step 1: Install Docker
-
-```bash
-# Update system
-sudo apt-get update
-sudo apt-get upgrade -y
-
-# Install Docker
-curl -fsSL https://get.docker.com -o get-docker.sh
-sudo sh get-docker.sh
-sudo usermod -aG docker $USER
-
-# Install Docker Compose
-sudo apt-get install docker-compose -y
-
-# Logout and login again for group changes
-```
-
-#### Step 2: Build and Run
-
-```bash
-cd /app
-
-# Build images
-docker-compose build
-
-# Start services
-docker-compose up -d
-
-# Check status
-docker-compose ps
-```
-
----
-
-## Docker Commands Reference
-
-### Building Images
-
-```bash
-# Build all services
-docker-compose build
-
-# Build specific service
-docker-compose build backend
-docker-compose build frontend
-
-# Build without cache
+docker-compose down
 docker-compose build --no-cache
-```
-
-### Managing Services
-
-```bash
-# Start services
 docker-compose up -d
-
-# Stop services
-docker-compose stop
-
-# Restart services
-docker-compose restart
-
-# Remove stopped containers
-docker-compose rm -f
-
-# Scale services (not applicable for this app)
-docker-compose up -d --scale backend=2
-```
-
-### Viewing Logs
-
-```bash
-# Follow all logs
-docker-compose logs -f
-
-# Last 100 lines
-docker-compose logs --tail=100
-
-# Specific service logs
-docker-compose logs -f backend
-
-# Save logs to file
-docker-compose logs > portfolio-logs.txt
-```
-
-### Accessing Containers
-
-```bash
-# Execute commands in backend
-docker-compose exec backend bash
-docker-compose exec backend python
-
-# Execute commands in frontend
-docker-compose exec frontend sh
-
-# Access MongoDB
-docker-compose exec mongodb mongosh
-```
-
-### Health Checks
-
-```bash
-# Check service health
-docker-compose ps
-
-# Inspect specific service
-docker inspect portfolio-backend
-
-# View resource usage
-docker stats
 ```
 
 ---
 
 ## Troubleshooting
 
-### Issue 1: Port Already in Use
+### Issue: "Login failed" or API not responding
 
+**Cause**: Frontend can't reach backend because of incorrect IP address.
+
+**Fix**:
+1. Check your IP: `hostname -I`
+2. Update `docker-compose.yml` with correct IP
+3. Rebuild: `docker-compose up -d --build`
+
+### Issue: MongoDB fails to start on Raspberry Pi
+
+**Cause**: MongoDB version incompatible with ARM processor.
+
+**Fix**: Ensure you're using `mongo:4.4.18` (not 4.4.19 or higher)
+
+### Issue: Frontend build fails with engine error
+
+**Cause**: Node version mismatch with some packages.
+
+**Fix**: Ensure Dockerfile.frontend uses `node:22-alpine` and `yarn install --ignore-engines`
+
+### Issue: "Name or service not known" errors
+
+**Cause**: Services trying to connect before MongoDB is ready.
+
+**Fix**: Wait 60 seconds after `docker-compose up -d` before seeding
+
+### Issue: Permission denied
+
+**Fix**: Use `sudo` with Docker commands or add user to docker group:
 ```bash
-# Find process using port 3000
-sudo lsof -i :3000
-# or
-sudo netstat -tulpn | grep 3000
-
-# Kill the process
-sudo kill -9 <PID>
-
-# Or change port in docker-compose.yml
-ports:
-  - "3001:80"  # Change 3000 to 3001
-```
-
-### Issue 2: MongoDB Connection Failed
-
-```bash
-# Check MongoDB logs
-docker-compose logs mongodb
-
-# Restart MongoDB
-docker-compose restart mongodb
-
-# Check if MongoDB is accessible
-docker-compose exec mongodb mongosh --eval "db.version()"
-
-# Recreate MongoDB with fresh data
-docker-compose down
-docker volume rm app_mongodb_data
-docker-compose up -d
-```
-
-### Issue 3: Backend Not Starting
-
-```bash
-# Check backend logs
-docker-compose logs backend
-
-# Common fixes:
-# 1. Check environment variables
-docker-compose exec backend env | grep MONGO
-
-# 2. Reinstall dependencies
-docker-compose exec backend pip install -r requirements.txt
-
-# 3. Rebuild backend
-docker-compose build --no-cache backend
-docker-compose up -d backend
-```
-
-### Issue 4: Frontend Build Failed
-
-```bash
-# Check Node version
-docker-compose exec frontend node --version
-
-# Clear cache and rebuild
-docker-compose down
-docker-compose build --no-cache frontend
-docker-compose up -d frontend
-
-# If memory issues on Raspberry Pi
-# Add to docker-compose.yml under frontend:
-environment:
-  - NODE_OPTIONS=--max_old_space_size=2048
-```
-
-### Issue 5: Slow Performance on Raspberry Pi
-
-```bash
-# Limit resource usage in docker-compose.yml
-services:
-  backend:
-    deploy:
-      resources:
-        limits:
-          cpus: '2'
-          memory: 1G
-        reservations:
-          memory: 512M
-```
-
-### Issue 6: Analytics Not Showing Visitors
-
-```bash
-# Check if analytics tracking is working
-curl -X POST http://localhost:8001/api/analytics/track \
-  -H "Content-Type: application/json" \
-  -d '{"event_type": "page_view", "page": "/"}'
-
-# Check MongoDB for analytics data
-docker-compose exec mongodb mongosh portfolio_db \
-  --eval "db.analytics_events.find().pretty()"
-
-# Check backend logs for tracking errors
-docker-compose logs backend | grep -i analytics
-
-# Restart backend to refresh connections
-docker-compose restart backend
-```
-
-### Issue 7: Docker Compose Version Issues
-
-```bash
-# Check version
-docker-compose version
-
-# If old version, upgrade
-sudo apt-get update
-sudo apt-get install --only-upgrade docker-compose
-
-# Or install latest manually
-sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
+sudo usermod -aG docker $USER
+# Log out and back in
 ```
 
 ---
 
-## Production Deployment
+## Network Architecture
 
-### Environment Variables
-
-Create `.env` file in project root:
-
-```env
-# Backend
-MONGO_URL=mongodb://mongodb:27017/
-DB_NAME=portfolio_db
-
-# Frontend
-REACT_APP_BACKEND_URL=https://api.yourdomain.com
-
-# MongoDB (optional)
-MONGO_INITDB_ROOT_USERNAME=admin
-MONGO_INITDB_ROOT_PASSWORD=your_secure_password
+```
+Browser (your device)
+    |
+    v
+[port 3000] --> Nginx (frontend container) --> serves React app
+    |
+    v
+React app makes API calls to REACT_APP_BACKEND_URL
+    |
+    v
+[port 8001] --> FastAPI (backend container)
+    |
+    v
+[port 27017] --> MongoDB (database container)
 ```
 
-### Secure MongoDB
-
-Update `docker-compose.yml`:
-
-```yaml
-mongodb:
-  image: mongo:6.0
-  environment:
-    MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
-    MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
-    MONGO_INITDB_DATABASE: portfolio_db
-  volumes:
-    - mongodb_data:/data/db
-  # Don't expose port in production
-  # ports:
-  #   - "27017:27017"
-```
-
-### Add SSL/TLS with Nginx Reverse Proxy
-
-Create `docker-compose.prod.yml`:
-
-```yaml
-version: '3.8'
-
-services:
-  nginx:
-    image: nginx:alpine
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx-prod.conf:/etc/nginx/conf.d/default.conf
-      - ./ssl:/etc/nginx/ssl
-    depends_on:
-      - frontend
-      - backend
-    networks:
-      - portfolio-network
-
-  # ... other services
-```
+**Key Point**: The browser runs on YOUR device, not inside Docker. So `REACT_APP_BACKEND_URL` must be an IP address accessible from your device, not Docker's internal network names.
 
 ---
 
-## Performance Optimization
+## Security Notes
 
-### For Raspberry Pi 4
-
-```yaml
-# docker-compose.yml optimizations
-services:
-  backend:
-    environment:
-      - WORKERS=2  # Adjust based on CPU cores
-    deploy:
-      resources:
-        limits:
-          cpus: '2'
-          memory: 1G
-
-  frontend:
-    environment:
-      - NODE_OPTIONS=--max_old_space_size=2048
-    deploy:
-      resources:
-        limits:
-          cpus: '2'
-          memory: 1.5G
-```
-
-### Use Docker BuildKit
-
-```bash
-# Enable BuildKit for faster builds
-export DOCKER_BUILDKIT=1
-export COMPOSE_DOCKER_CLI_BUILD=1
-
-# Build with BuildKit
-docker-compose build
-```
-
----
-
-## Data Backup and Restore
-
-### Backup MongoDB Data
-
-```bash
-# Backup
-docker-compose exec mongodb mongodump --out=/data/backup
-docker cp portfolio-mongodb:/data/backup ./backup-$(date +%Y%m%d)
-
-# Or using volume
-docker run --rm --volumes-from portfolio-mongodb \
-  -v $(pwd):/backup \
-  ubuntu tar cvf /backup/mongodb-backup.tar /data/db
-```
-
-### Restore MongoDB Data
-
-```bash
-# Restore
-docker cp ./backup portfolio-mongodb:/data/backup
-docker-compose exec mongodb mongorestore /data/backup
-```
-
-### Backup Docker Volumes
-
-```bash
-# List volumes
-docker volume ls
-
-# Backup volume
-docker run --rm -v app_mongodb_data:/data -v $(pwd):/backup \
-  ubuntu tar cvf /backup/volume-backup.tar /data
-```
-
----
-
-## Monitoring
-
-### View Resource Usage
-
-```bash
-# Real-time stats
-docker stats
-
-# Specific container
-docker stats portfolio-backend
-
-# Export metrics
-docker stats --no-stream --format "table {{.Container}}\t{{.CPUPerc}}\t{{.MemUsage}}"
-```
-
-### Health Monitoring
-
-```bash
-# Check health status
-docker-compose ps
-
-# Detailed inspection
-docker inspect --format='{{.State.Health.Status}}' portfolio-backend
-```
-
----
-
-## CI/CD Integration
-
-### GitHub Actions Example
-
-```yaml
-# .github/workflows/deploy.yml
-name: Deploy Portfolio
-
-on:
-  push:
-    branches: [ main ]
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      
-      - name: Build and push Docker images
-        run: |
-          docker-compose build
-          docker-compose push
-      
-      - name: Deploy to server
-        run: |
-          ssh user@server 'cd /app && docker-compose pull && docker-compose up -d'
-```
-
----
-
-## FAQ
-
-**Q: Can I run this on Raspberry Pi 3?**
-A: Yes, but it will be slower. Reduce memory limits and use production builds.
-
-**Q: How much disk space is needed?**
-A: Minimum 8GB. Images + data ≈ 3-4GB.
-
-**Q: Can I use external MongoDB?**
-A: Yes, update MONGO_URL in backend environment and remove mongodb service.
-
-**Q: How to update the application?**
-```bash
-git pull
-docker-compose build
-docker-compose up -d
-```
-
-**Q: How to enable HTTPS?**
-A: Use nginx-proxy or traefik reverse proxy with Let's Encrypt.
+1. **Change the default password** after first login
+2. For production, set a strong `JWT_SECRET_KEY` environment variable
+3. Consider using HTTPS with a reverse proxy for public deployments
 
 ---
 
 ## Support
 
-For issues:
-1. Check logs: `docker-compose logs -f`
-2. Restart services: `docker-compose restart`
-3. Rebuild: `docker-compose build --no-cache`
-4. Contact: vagesh.anagani@gmail.com
+For issues, check:
+1. Container logs: `docker-compose logs -f`
+2. Service status: `docker-compose ps`
+3. MongoDB health: `docker-compose exec mongodb mongo --eval "db.adminCommand('ping')"`
 
----
-
-**Your portfolio is now Dockerized! 🐳**
+Contact: vagesh.anagani@gmail.com
