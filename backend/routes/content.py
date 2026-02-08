@@ -396,3 +396,105 @@ async def update_settings(settings: WebsiteSettings):
     except Exception as e:
         logger.error(f"Error updating settings: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to update settings")
+
+# Experience
+@router.get("/experience")
+async def get_experience():
+    """Get all experience"""
+    try:
+        experience = await db.experience.find({}, {"_id": 0}).to_list(100)
+        return {"experience": experience if experience else DEFAULT_EXPERIENCE}
+    except Exception as e:
+        logger.error(f"Error fetching experience: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch experience")
+
+@router.post("/experience")
+async def add_experience(exp: ExperienceUpdate):
+    """Add a new experience"""
+    try:
+        exp_dict = exp.dict()
+        max_exp = await db.experience.find_one(sort=[("id", -1)])
+        exp_dict['id'] = (max_exp.get('id', 0) + 1) if max_exp else 1
+        await db.experience.insert_one(exp_dict)
+        return {"success": True, "message": "Experience added successfully", "id": exp_dict['id']}
+    except Exception as e:
+        logger.error(f"Error adding experience: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to add experience")
+
+@router.put("/experience/{exp_id}")
+async def update_experience(exp_id: int, exp: ExperienceUpdate):
+    """Update experience"""
+    try:
+        result = await db.experience.update_one(
+            {"id": exp_id},
+            {"$set": exp.dict(exclude={'id'})}
+        )
+        if result.modified_count == 0:
+            raise HTTPException(status_code=404, detail="Experience not found")
+        return {"success": True, "message": "Experience updated successfully"}
+    except Exception as e:
+        logger.error(f"Error updating experience: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to update experience")
+
+@router.delete("/experience/{exp_id}")
+async def delete_experience(exp_id: int):
+    """Delete experience"""
+    try:
+        result = await db.experience.delete_one({"id": exp_id})
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Experience not found")
+        return {"success": True, "message": "Experience deleted successfully"}
+    except Exception as e:
+        logger.error(f"Error deleting experience: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to delete experience")
+
+# Education
+@router.get("/education")
+async def get_education():
+    """Get all education"""
+    try:
+        education = await db.education.find({}, {"_id": 0}).to_list(100)
+        return {"education": education if education else DEFAULT_EDUCATION}
+    except Exception as e:
+        logger.error(f"Error fetching education: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch education")
+
+@router.post("/education")
+async def add_education(edu: EducationUpdate):
+    """Add a new education"""
+    try:
+        edu_dict = edu.dict()
+        max_edu = await db.education.find_one(sort=[("id", -1)])
+        edu_dict['id'] = (max_edu.get('id', 0) + 1) if max_edu else 1
+        await db.education.insert_one(edu_dict)
+        return {"success": True, "message": "Education added successfully", "id": edu_dict['id']}
+    except Exception as e:
+        logger.error(f"Error adding education: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to add education")
+
+@router.put("/education/{edu_id}")
+async def update_education(edu_id: int, edu: EducationUpdate):
+    """Update education"""
+    try:
+        result = await db.education.update_one(
+            {"id": edu_id},
+            {"$set": edu.dict(exclude={'id'})}
+        )
+        if result.modified_count == 0:
+            raise HTTPException(status_code=404, detail="Education not found")
+        return {"success": True, "message": "Education updated successfully"}
+    except Exception as e:
+        logger.error(f"Error updating education: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to update education")
+
+@router.delete("/education/{edu_id}")
+async def delete_education(edu_id: int):
+    """Delete education"""
+    try:
+        result = await db.education.delete_one({"id": edu_id})
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Education not found")
+        return {"success": True, "message": "Education deleted successfully"}
+    except Exception as e:
+        logger.error(f"Error deleting education: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to delete education")
