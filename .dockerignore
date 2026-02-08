@@ -1,0 +1,58 @@
+# Node
+node_modules
+npm-debug.log
+yarn-error.log
+.yarn
+
+# Python
+__pycache__
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+
+# IDEs
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+
+# Docker
+.dockerignore
+Dockerfile*
+docker-compose*.yml
+
+# Logs
+logs
+*.log
+
+# Environment
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Build
+build/
+dist/
+.cache/
+
+# Testing
+coverage/
+.pytest_cache/
+
+# Misc
+*.md
+!README.md

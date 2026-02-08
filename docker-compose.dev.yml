@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:6.0
+    container_name: portfolio-mongodb-dev
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_DATABASE: portfolio_db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data_dev:/data/db
+    networks:
+      - portfolio-network-dev
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: portfolio-backend-dev
+    restart: unless-stopped
+    environment:
+      - MONGO_URL=mongodb://mongodb:27017/
+      - DB_NAME=portfolio_db
+    ports:
+      - "8001:8001"
+    depends_on:
+      - mongodb
+    networks:
+      - portfolio-network-dev
+    volumes:
+      - ./backend:/app
+    command: uvicorn server:app --host 0.0.0.0 --port 8001 --reload
+
+  frontend:
+    image: node:18-alpine
+    container_name: portfolio-frontend-dev
+    restart: unless-stopped
+    working_dir: /app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - portfolio-network-dev
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - REACT_APP_BACKEND_URL=http://localhost:8001
+      - CHOKIDAR_USEPOLLING=true
+    command: sh -c "yarn install && yarn start"
+
+networks:
+  portfolio-network-dev:
+    driver: bridge
+
+volumes:
+  mongodb_data_dev:
+    driver: local
