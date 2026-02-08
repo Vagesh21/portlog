@@ -4,6 +4,9 @@ npm-debug.log
 yarn-error.log
 .yarn
 
+# Don't ignore yarn.lock - needed for builds
+# yarn.lock
+
 # Python
 __pycache__
 *.py[cod]
