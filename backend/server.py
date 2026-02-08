@@ -11,7 +11,7 @@ import uuid
 from datetime import datetime, timezone
 
 # Import route modules
-from routes import contact, analytics
+from routes import contact, analytics, content
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
