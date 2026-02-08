@@ -70,11 +70,7 @@ const HomePage = () => {
               transition={{ delay: 0.2, type: 'spring' }}
               className="inline-block mb-4"
             >
-              <img
-                src={personalInfo.profileImage}
-                alt={personalInfo.name}
-                className="w-32 h-32 rounded-full border-4 border-[#00d4ff] shadow-lg shadow-[#00d4ff]/50"
-              />
+              <InteractiveAvatar />
             </motion.div>
             
             <h1 className="text-5xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-[#00d4ff] via-[#06b6d4] to-[#10b981] bg-clip-text text-transparent">
