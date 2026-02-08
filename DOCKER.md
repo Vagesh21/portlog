@@ -6,25 +6,41 @@ Complete guide for running the Cybersecurity Portfolio using Docker on any platf
 
 ### Prerequisites
 - Docker Engine 20.10+
-- Docker Compose 1.29+
+- Docker Compose 2.0+ (or docker-compose 1.29+)
 - 2GB+ RAM (4GB recommended for Raspberry Pi)
 
-### 1. Start Everything with One Command
+### 1. Build and Start
 
 ```bash
-# Production mode
+# Navigate to project directory
+cd /path/to/portfolio
+
+# Build images (first time only)
+docker-compose build
+
+# Start all services
 docker-compose up -d
 
-# Development mode (with hot reload)
-docker-compose -f docker-compose.dev.yml up -d
+# Wait for services to be healthy (about 1-2 minutes)
+docker-compose ps
 ```
 
-### 2. Access Your Portfolio
+### 2. Seed the Database (First Time Only)
+
+After all services are running, seed the database with initial content:
+
+```bash
+curl -X POST http://localhost:8001/api/content/seed
+```
+
+### 3. Access Your Portfolio
 
 - **Frontend**: http://localhost:3000
 - **Backend API**: http://localhost:8001
 - **API Docs**: http://localhost:8001/docs
-- **Admin Panel**: http://localhost:3000/admin-analytics-dashboard
+- **Admin Login**: http://localhost:3000/admin-login
+- **Admin Panel**: http://localhost:3000/admin-analytics-dashboard (after login)
+- **Default Credentials**: `admin` / `password`
 - **MongoDB**: localhost:27017
 
 ### 3. View Logs
