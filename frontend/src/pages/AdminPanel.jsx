@@ -1,22 +1,47 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { 
   BarChart3,
-  Settings,
+  Settings as SettingsIcon,
   Mail,
   Edit,
   Save,
   Trash2,
   Plus,
-  Download,
-  RefreshCw
+  RefreshCw,
+  ArrowLeft
 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { Card } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { toast } from '../hooks/use-toast';
-import AdminDashboard from './AdminDashboard';
+import { 
+  Users, 
+  MousePointer, 
+  Eye, 
+  TrendingUp,
+  Calendar,
+  Globe,
+  Monitor
+} from 'lucide-react';
+import { 
+  LineChart, 
+  Line, 
+  AreaChart,
+  Area,
+  BarChart,
+  Bar,
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell
+} from 'recharts';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
