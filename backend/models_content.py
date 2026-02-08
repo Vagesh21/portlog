@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional, List
+from typing import Optional, List, Dict
 
 # Content Update Models
 class PersonalInfoUpdate(BaseModel):
@@ -26,14 +26,32 @@ class ProjectUpdate(BaseModel):
     technologies: List[str]
     status: str
     highlights: List[str]
-    metrics: dict
+    metrics: Dict[str, int] = {}
 
 class CertificationUpdate(BaseModel):
     name: str
     issuer: str
     year: int
-    verified: bool
-    color: str
+    verified: bool = True
+    color: str = "#00d4ff"
+
+class ExperienceUpdate(BaseModel):
+    id: Optional[int] = None
+    title: str
+    company: str
+    duration: str
+    location: Optional[str] = ""
+    description: str
+    achievements: List[str]
+
+class EducationUpdate(BaseModel):
+    id: Optional[int] = None
+    degree: str
+    institution: str
+    location: Optional[str] = ""
+    expected: Optional[str] = ""
+    completed: Optional[str] = ""
+    current: bool = False
 
 class WebsiteSettings(BaseModel):
     theme_color: Optional[str] = None
