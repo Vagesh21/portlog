@@ -412,6 +412,7 @@ const AdminPanel = () => {
             </div>
           </TabsContent>
 
+          {/* Messages Tab */}
           <TabsContent value="messages">
             <div className="space-y-4">
               <div className="flex justify-between items-center mb-4">
