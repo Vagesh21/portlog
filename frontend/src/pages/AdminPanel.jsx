@@ -702,6 +702,76 @@ const AdminPanel = () => {
             </Card>
           </TabsContent>
         </Tabs>
+
+        {/* Password Change Dialog */}
+        {showPasswordDialog && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setShowPasswordDialog(false)}>
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-[#1a1f3a] border border-[#2a3150] rounded-lg p-6 max-w-md w-full mx-4"
+            >
+              <h2 className="text-2xl font-bold text-[#e5e7eb] mb-4">Change Password</h2>
+              <form onSubmit={handlePasswordChange} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-[#9ca3af] mb-2">
+                    Current Password
+                  </label>
+                  <Input
+                    type="password"
+                    value={passwordData.currentPassword}
+                    onChange={(e) => setPasswordData({...passwordData, currentPassword: e.target.value})}
+                    required
+                    className="bg-[#0a0e27] border-[#2a3150] text-[#e5e7eb]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-[#9ca3af] mb-2">
+                    New Password
+                  </label>
+                  <Input
+                    type="password"
+                    value={passwordData.newPassword}
+                    onChange={(e) => setPasswordData({...passwordData, newPassword: e.target.value})}
+                    required
+                    minLength={6}
+                    className="bg-[#0a0e27] border-[#2a3150] text-[#e5e7eb]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-[#9ca3af] mb-2">
+                    Confirm New Password
+                  </label>
+                  <Input
+                    type="password"
+                    value={passwordData.confirmPassword}
+                    onChange={(e) => setPasswordData({...passwordData, confirmPassword: e.target.value})}
+                    required
+                    minLength={6}
+                    className="bg-[#0a0e27] border-[#2a3150] text-[#e5e7eb]"
+                  />
+                </div>
+                <div className="flex gap-3 pt-4">
+                  <Button
+                    type="submit"
+                    className="flex-1 bg-[#00d4ff] hover:bg-[#0ea5e9] text-[#0a0e27]"
+                  >
+                    Change Password
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={() => setShowPasswordDialog(false)}
+                    variant="ghost"
+                    className="flex-1 border border-[#2a3150] hover:bg-[#2a3150]"
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </form>
+            </motion.div>
+          </div>
+        )}
       </div>
     </div>
   );
