@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Github, Linkedin, Mail, Phone, MapPin, Code, Server, Shield, Award as AwardIcon, TrendingUp } from 'lucide-react';
 import FloatingNav from './components/FloatingNav';
 import Hero3D from './components/Hero3D';
+import InteractiveAvatar from './components/InteractiveAvatar';
 import SkillsRadar from './components/SkillsRadar';
 import ProjectDashboard from './components/ProjectDashboard';
 import ThreatMap from './components/ThreatMap';
