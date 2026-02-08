@@ -1,5 +1,5 @@
 # Backend Dockerfile for ARM64 (Raspberry Pi 4) and x86_64
-FROM python:3.9-slim
+FROM python:3.11-slim
 
 # Set working directory
 WORKDIR /app
@@ -26,7 +26,7 @@ RUN mkdir -p /var/log
 # Expose port
 EXPOSE 8001
 
-# Health check using curl instead of python requests
+# Health check using curl
 HEALTHCHECK --interval=30s --timeout=5s --start-period=40s --retries=3 \
   CMD curl -f http://localhost:8001/api/ || exit 1
 
