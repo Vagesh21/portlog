@@ -55,6 +55,12 @@ const AdminPanel = () => {
   const [projects, setProjects] = useState([]);
   const [skills, setSkills] = useState([]);
   const [settings, setSettings] = useState({});
+  const [showPasswordDialog, setShowPasswordDialog] = useState(false);
+  const [passwordData, setPasswordData] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  });
   
   // Analytics states
   const [stats, setStats] = useState({
