@@ -337,7 +337,7 @@ function App() {
         <AnalyticsTracker />
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/admin-analytics-dashboard" element={<AdminDashboard />} />
+          <Route path="/admin-analytics-dashboard" element={<AdminPanel />} />
         </Routes>
       </BrowserRouter>
     </div>
