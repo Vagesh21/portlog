@@ -171,6 +171,63 @@ const AdminPanel = () => {
     }
   };
 
+  // Logout function
+  const handleLogout = () => {
+    localStorage.removeItem('admin_token');
+    localStorage.removeItem('admin_username');
+    toast({ title: "Logged out successfully" });
+    navigate('/admin-login');
+  };
+
+  // Change password
+  const handlePasswordChange = async (e) => {
+    e.preventDefault();
+    
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      toast({ 
+        title: "Error", 
+        description: "New passwords don't match", 
+        variant: "destructive" 
+      });
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('admin_token');
+      const response = await fetch(`${API}/auth/change-password`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          current_password: passwordData.currentPassword,
+          new_password: passwordData.newPassword
+        })
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        toast({ title: "Success", description: "Password changed successfully" });
+        setShowPasswordDialog(false);
+        setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+      } else {
+        toast({ 
+          title: "Error", 
+          description: data.message || "Failed to change password", 
+          variant: "destructive" 
+        });
+      }
+    } catch (error) {
+      toast({ 
+        title: "Error", 
+        description: "Failed to change password", 
+        variant: "destructive" 
+      });
+    }
+  };
+
   const COLORS = ['#00d4ff', '#10b981', '#f59e0b'];
 
   return (
