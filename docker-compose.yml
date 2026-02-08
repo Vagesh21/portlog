@@ -1,7 +1,7 @@
 services:
-  # MongoDB Database
+  # MongoDB Database - using 4.4 for better ARM64 compatibility
   mongodb:
-    image: mongo:6.0
+    image: mongo:4.4
     container_name: portfolio-mongodb
     restart: unless-stopped
     environment:
@@ -14,11 +14,11 @@ services:
     networks:
       - portfolio-network
     healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      test: echo 'db.runCommand("ping").ok' | mongo localhost:27017/test --quiet
       interval: 30s
       timeout: 10s
       retries: 5
-      start_period: 40s
+      start_period: 60s
 
   # Backend API
   backend:
@@ -57,8 +57,7 @@ services:
     ports:
       - "3000:80"
     depends_on:
-      backend:
-        condition: service_healthy
+      - backend
     networks:
       - portfolio-network
     healthcheck:
