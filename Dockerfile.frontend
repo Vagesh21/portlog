@@ -4,16 +4,19 @@ FROM node:18-alpine AS builder
 # Set working directory
 WORKDIR /app
 
-# Copy package files
-COPY frontend/package.json frontend/yarn.lock ./
+# Copy package files - handle cases with or without yarn.lock
+COPY frontend/package.json ./
+COPY frontend/yarn.lock* ./
 
 # Install dependencies
-RUN yarn install --frozen-lockfile
+RUN yarn install
 
 # Copy source code
 COPY frontend/ .
 
-# Build the app
+# Build the app with environment variable
+ARG REACT_APP_BACKEND_URL=http://localhost:8001
+ENV REACT_APP_BACKEND_URL=$REACT_APP_BACKEND_URL
 RUN yarn build
 
 # Production stage with Nginx
