@@ -17,6 +17,12 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
+# Get the directory where the script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd "$SCRIPT_DIR"
+
+echo "Working directory: $SCRIPT_DIR"
+
 # Check if running on ARM64
 ARCH=$(uname -m)
 echo "Detected architecture: $ARCH"
@@ -38,7 +44,6 @@ sudo apt-get install -y \
     python3-venv \
     nodejs \
     npm \
-    mongodb \
     git \
     curl \
     wget \
@@ -76,25 +81,12 @@ else
     echo -e "${YELLOW}Yarn already installed${NC}"
 fi
 
-# Setup MongoDB
-echo -e "${GREEN}[6/8] Setting up MongoDB...${NC}"
-sudo systemctl enable mongodb
-sudo systemctl start mongodb
-sleep 3
-
-# Check MongoDB status
-if sudo systemctl is-active --quiet mongodb; then
-    echo -e "${GREEN}MongoDB is running${NC}"
-else
-    echo -e "${RED}MongoDB failed to start. Trying to fix...${NC}"
-    sudo mkdir -p /data/db
-    sudo chown -R mongodb:mongodb /data/db
-    sudo systemctl restart mongodb
-fi
+# Skip MongoDB setup - we'll use Docker for MongoDB
+echo -e "${GREEN}[6/8] MongoDB will run in Docker container...${NC}"
 
 # Setup Backend
 echo -e "${GREEN}[7/8] Setting up Backend...${NC}"
-cd /app/backend || exit
+cd "$SCRIPT_DIR/backend"
 
 # Create virtual environment
 python3 -m venv venv
@@ -113,15 +105,17 @@ if [ ! -f .env ]; then
     cat > .env << EOF
 MONGO_URL=mongodb://localhost:27017/
 DB_NAME=portfolio_db
+CORS_ORIGINS=*
 EOF
     echo -e "${GREEN}Backend .env created${NC}"
 fi
 
 deactivate
+cd "$SCRIPT_DIR"
 
 # Setup Frontend
 echo -e "${GREEN}[8/8] Setting up Frontend...${NC}"
-cd /app/frontend || exit
+cd "$SCRIPT_DIR/frontend"
 
 # Install frontend dependencies
 echo "Installing Node packages (this may take a while on Raspberry Pi)..."
@@ -136,7 +130,7 @@ EOF
     echo -e "${GREEN}Frontend .env created${NC}"
 fi
 
-cd /app
+cd "$SCRIPT_DIR"
 
 echo ""
 echo "=========================================="
@@ -146,16 +140,21 @@ echo ""
 echo "To start the application:"
 echo ""
 echo "Option 1: Using Docker (Recommended)"
+echo "  cd $SCRIPT_DIR"
 echo "  docker-compose up -d"
 echo ""
 echo "Option 2: Manual Start"
-echo "  Terminal 1: cd backend && source venv/bin/activate && uvicorn server:app --host 0.0.0.0 --port 8001"
-echo "  Terminal 2: cd frontend && yarn start"
+echo "  Terminal 1: cd $SCRIPT_DIR/backend && source venv/bin/activate && uvicorn server:app --host 0.0.0.0 --port 8001"
+echo "  Terminal 2: cd $SCRIPT_DIR/frontend && yarn start"
+echo ""
+echo "After starting, seed the database by running:"
+echo "  curl -X POST http://localhost:8001/api/content/seed"
 echo ""
 echo "Access your portfolio at:"
 echo "  Frontend: http://localhost:3000"
-echo "  Backend: http://localhost:8001"
-echo "  Admin Panel: http://localhost:3000/admin-analytics-dashboard"
+echo "  Backend API: http://localhost:8001/api/"
+echo "  Admin Login: http://localhost:3000/admin-login"
+echo "  Default Credentials: admin / password"
 echo ""
 echo "Note: If using Docker, you may need to logout and login again for group changes to take effect."
 echo ""
