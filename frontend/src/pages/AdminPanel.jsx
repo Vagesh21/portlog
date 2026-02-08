@@ -163,6 +163,8 @@ const AdminPanel = () => {
     }
   };
 
+  const COLORS = ['#00d4ff', '#10b981', '#f59e0b'];
+
   return (
     <div className="min-h-screen bg-[#0a0e27] py-8 px-4">
       <div className="max-w-7xl mx-auto">
@@ -171,11 +173,23 @@ const AdminPanel = () => {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <h1 className="text-4xl font-bold text-[#e5e7eb] mb-2 flex items-center gap-3">
-            <Settings className="text-[#00d4ff]" size={36} />
-            Admin Control Panel
-          </h1>
-          <p className="text-[#9ca3af]">Manage your portfolio content and analytics</p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-4xl font-bold text-[#e5e7eb] mb-2 flex items-center gap-3">
+                <SettingsIcon className="text-[#00d4ff]" size={36} />
+                Admin Control Panel
+              </h1>
+              <p className="text-[#9ca3af]">Manage your portfolio content and analytics</p>
+            </div>
+            <Button 
+              onClick={() => navigate('/')}
+              variant="ghost"
+              className="text-[#9ca3af] hover:text-[#00d4ff]"
+            >
+              <ArrowLeft size={20} className="mr-2" />
+              Back to Site
+            </Button>
+          </div>
         </motion.div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
