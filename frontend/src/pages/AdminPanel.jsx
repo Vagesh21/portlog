@@ -131,7 +131,7 @@ const AdminPanel = () => {
           </TabsList>
 
           <TabsContent value="analytics">
-            <AnalyticsDashboard />
+            <AdminDashboard />
           </TabsContent>
 
           <TabsContent value="messages">
