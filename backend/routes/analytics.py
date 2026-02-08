@@ -216,7 +216,10 @@ async def get_analytics_stats(time_range: str = Query(default="7d")):
                 ip=event.get('ip_address', 'Unknown'),
                 timestamp=time_str,
                 page=event.get('page', '/'),
-                device=event.get('device_type', 'desktop').capitalize()
+                device=event.get('device_type', 'desktop').capitalize(),
+                browser=event.get('browser', 'Unknown'),
+                os=event.get('os', 'Unknown'),
+                location=event.get('location', 'Unknown')
             ))
         
         return AnalyticsStats(
