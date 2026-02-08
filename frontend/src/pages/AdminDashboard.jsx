@@ -282,18 +282,42 @@ const AdminDashboard = () => {
                 {recentVisitors.map((visitor, index) => (
                   <div
                     key={index}
-                    className="flex items-center justify-between p-3 bg-[#0a0e27]/50 rounded-lg border border-[#2a3150]"
+                    className="p-4 bg-[#0a0e27]/50 rounded-lg border border-[#2a3150] hover:border-[#00d4ff]/30 transition-all"
                   >
-                    <div className="flex items-center gap-3">
-                      <div className="w-2 h-2 bg-[#10b981] rounded-full animate-pulse"></div>
+                    <div className="grid grid-cols-2 gap-3">
+                      {/* IP and Time */}
                       <div>
-                        <div className="text-sm text-[#e5e7eb] font-mono">{visitor.ip}</div>
-                        <div className="text-xs text-[#6b7280]">{visitor.page}</div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <div className="w-2 h-2 bg-[#10b981] rounded-full animate-pulse"></div>
+                          <span className="text-sm text-[#e5e7eb] font-mono">{visitor.ip}</span>
+                        </div>
+                        <div className="text-xs text-[#6b7280]">{visitor.timestamp}</div>
                       </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-xs text-[#9ca3af]">{visitor.timestamp}</div>
-                      <div className="text-xs text-[#00d4ff]">{visitor.device}</div>
+                      
+                      {/* Device and Browser */}
+                      <div className="text-right">
+                        <div className="text-xs text-[#00d4ff] mb-1">{visitor.device}</div>
+                        <div className="text-xs text-[#9ca3af]">{visitor.browser || 'Unknown'}</div>
+                      </div>
+                      
+                      {/* Page and OS */}
+                      <div>
+                        <div className="text-xs text-[#9ca3af] mb-1">Page:</div>
+                        <div className="text-xs text-[#e5e7eb] truncate">{visitor.page}</div>
+                      </div>
+                      
+                      <div className="text-right">
+                        <div className="text-xs text-[#9ca3af] mb-1">OS:</div>
+                        <div className="text-xs text-[#e5e7eb]">{visitor.os || 'Unknown'}</div>
+                      </div>
+                      
+                      {/* Location */}
+                      {visitor.location && (
+                        <div className="col-span-2">
+                          <div className="text-xs text-[#9ca3af] mb-1">Location:</div>
+                          <div className="text-xs text-[#10b981]">{visitor.location}</div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))}
