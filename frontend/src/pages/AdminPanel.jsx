@@ -471,6 +471,7 @@ const AdminPanel = () => {
             </div>
           </TabsContent>
 
+          {/* Content Tab */}
           <TabsContent value="content">
             <div className="space-y-8">
               <div>
@@ -483,36 +484,42 @@ const AdminPanel = () => {
                 </div>
                 
                 <div className="grid gap-4">
-                  {projects.map((project) => (
-                    <Card key={project.id} className="bg-[#1a1f3a]/50 border-[#2a3150] p-6">
-                      <div className="flex justify-between items-start">
-                        <div className="flex-1">
-                          <h3 className="text-lg font-bold text-[#e5e7eb] mb-2">{project.title}</h3>
-                          <p className="text-sm text-[#9ca3af] mb-2">{project.description}</p>
-                          <div className="flex gap-2 flex-wrap">
-                            {project.technologies?.map((tech, i) => (
-                              <span key={i} className="text-xs bg-[#00d4ff]/10 text-[#00d4ff] px-2 py-1 rounded">
-                                {tech}
-                              </span>
-                            ))}
+                  {projects.length === 0 ? (
+                    <Card className="bg-[#1a1f3a]/50 border-[#2a3150] p-12 text-center">
+                      <p className="text-[#9ca3af]">No projects found. Content is managed via mockData.js</p>
+                    </Card>
+                  ) : (
+                    projects.map((project) => (
+                      <Card key={project.id} className="bg-[#1a1f3a]/50 border-[#2a3150] p-6">
+                        <div className="flex justify-between items-start">
+                          <div className="flex-1">
+                            <h3 className="text-lg font-bold text-[#e5e7eb] mb-2">{project.title}</h3>
+                            <p className="text-sm text-[#9ca3af] mb-2">{project.description}</p>
+                            <div className="flex gap-2 flex-wrap">
+                              {project.technologies?.map((tech, i) => (
+                                <span key={i} className="text-xs bg-[#00d4ff]/10 text-[#00d4ff] px-2 py-1 rounded">
+                                  {tech}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                          <div className="flex gap-2">
+                            <Button size="sm" variant="ghost" className="text-[#00d4ff] hover:bg-[#00d4ff]/10">
+                              <Edit size={16} />
+                            </Button>
+                            <Button 
+                              size="sm" 
+                              variant="ghost" 
+                              className="text-[#ef4444] hover:bg-[#ef4444]/10"
+                              onClick={() => deleteProject(project.id)}
+                            >
+                              <Trash2 size={16} />
+                            </Button>
                           </div>
                         </div>
-                        <div className="flex gap-2">
-                          <Button size="sm" variant="ghost" className="text-[#00d4ff] hover:bg-[#00d4ff]/10">
-                            <Edit size={16} />
-                          </Button>
-                          <Button 
-                            size="sm" 
-                            variant="ghost" 
-                            className="text-[#ef4444] hover:bg-[#ef4444]/10"
-                            onClick={() => deleteProject(project.id)}
-                          >
-                            <Trash2 size={16} />
-                          </Button>
-                        </div>
-                      </div>
-                    </Card>
-                  ))}
+                      </Card>
+                    ))
+                  )}
                 </div>
               </div>
 
@@ -526,27 +533,33 @@ const AdminPanel = () => {
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {skills.map((skill, index) => (
-                    <Card key={index} className="bg-[#1a1f3a]/50 border-[#2a3150] p-4">
-                      <div className="flex justify-between items-center">
-                        <div className="flex-1">
-                          <p className="text-[#e5e7eb] font-semibold">{skill.category}</p>
-                          <div className="flex items-center gap-2 mt-2">
-                            <div className="flex-1 bg-[#2a3150] rounded-full h-2">
-                              <div 
-                                className="bg-[#00d4ff] h-2 rounded-full transition-all"
-                                style={{ width: `${skill.level}%` }}
-                              />
-                            </div>
-                            <span className="text-xs text-[#9ca3af]">{skill.level}%</span>
-                          </div>
-                        </div>
-                        <Button size="sm" variant="ghost" className="text-[#ef4444] hover:bg-[#ef4444]/10 ml-4">
-                          <Trash2 size={16} />
-                        </Button>
-                      </div>
+                  {skills.length === 0 ? (
+                    <Card className="bg-[#1a1f3a]/50 border-[#2a3150] p-12 text-center md:col-span-2">
+                      <p className="text-[#9ca3af]">No skills found. Content is managed via mockData.js</p>
                     </Card>
-                  ))}
+                  ) : (
+                    skills.map((skill, index) => (
+                      <Card key={index} className="bg-[#1a1f3a]/50 border-[#2a3150] p-4">
+                        <div className="flex justify-between items-center">
+                          <div className="flex-1">
+                            <p className="text-[#e5e7eb] font-semibold">{skill.category}</p>
+                            <div className="flex items-center gap-2 mt-2">
+                              <div className="flex-1 bg-[#2a3150] rounded-full h-2">
+                                <div 
+                                  className="bg-[#00d4ff] h-2 rounded-full transition-all"
+                                  style={{ width: `${skill.level}%` }}
+                                />
+                              </div>
+                              <span className="text-xs text-[#9ca3af]">{skill.level}%</span>
+                            </div>
+                          </div>
+                          <Button size="sm" variant="ghost" className="text-[#ef4444] hover:bg-[#ef4444]/10 ml-4">
+                            <Trash2 size={16} />
+                          </Button>
+                        </div>
+                      </Card>
+                    ))
+                  )}
                 </div>
               </div>
             </div>
