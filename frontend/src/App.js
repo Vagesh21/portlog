@@ -339,7 +339,15 @@ function App() {
         <AnalyticsTracker />
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/admin-analytics-dashboard" element={<AdminPanel />} />
+          <Route path="/admin-login" element={<LoginPage />} />
+          <Route 
+            path="/admin-analytics-dashboard" 
+            element={
+              <ProtectedRoute>
+                <AdminPanel />
+              </ProtectedRoute>
+            } 
+          />
         </Routes>
       </BrowserRouter>
     </div>
