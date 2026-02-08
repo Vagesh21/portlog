@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Github, Linkedin, Mail, Phone, MapPin, Code, Server, Shield, Award as AwardIcon, TrendingUp } from 'lucide-react';
 import FloatingNav from './components/FloatingNav';
@@ -13,6 +13,7 @@ import ContactForm from './components/ContactForm';
 import AdminDashboard from './pages/AdminDashboard';
 import { Toaster } from './components/ui/toaster';
 import { personalInfo, stats, experience, education } from './data/mockData';
+import { trackPageView } from './utils/analytics';
 
 const HomePage = () => {
   const [displayedText, setDisplayedText] = useState('');
