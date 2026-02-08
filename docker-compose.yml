@@ -1,3 +1,20 @@
+# =============================================================================
+# Cybersecurity Portfolio - Docker Compose Configuration
+# =============================================================================
+# 
+# IMPORTANT: Before running, update REACT_APP_BACKEND_URL with your machine's IP:
+#   - Find IP: hostname -I (Linux) or ipconfig (Windows) or ifconfig (Mac)
+#   - Replace YOUR_IP_ADDRESS below with your actual IP (e.g., 192.168.1.100)
+#
+# Quick Start:
+#   1. Edit this file and replace YOUR_IP_ADDRESS with your IP
+#   2. Run: docker-compose up -d --build
+#   3. Wait 60 seconds, then run: curl -X POST http://localhost:8001/api/content/seed
+#   4. Access: http://localhost:3000
+#   5. Admin Login: http://localhost:3000/admin-login (admin/password)
+#
+# =============================================================================
+
 services:
   # MongoDB Database - using 4.4.18 for Raspberry Pi 4 ARMv8.0 compatibility
   mongodb:
@@ -45,13 +62,15 @@ services:
       retries: 3
       start_period: 40s
 
-  # Frontend
+  # Frontend - IMPORTANT: Update YOUR_IP_ADDRESS below!
   frontend:
     build:
       context: .
       dockerfile: Dockerfile.frontend
       args:
-        REACT_APP_BACKEND_URL: http://localhost:8001
+        # ⚠️ CHANGE THIS to your machine's IP address (e.g., 192.168.1.100)
+        # Use 'localhost' only if accessing from the same machine
+        REACT_APP_BACKEND_URL: http://YOUR_IP_ADDRESS:8001
     container_name: portfolio-frontend
     restart: unless-stopped
     ports:
