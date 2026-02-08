@@ -47,22 +47,49 @@ const ContactForm = () => {
 
     setIsSubmitting(true);
 
-    // Simulate API call (will be replaced with real backend)
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setSubmitted(true);
-      toast({
-        title: "Message Sent!",
-        description: "Thank you for reaching out. I'll get back to you soon.",
+    try {
+      // Make real API call to backend
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/contact`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+          captcha_answer: userAnswer
+        })
       });
-      
-      // Reset form
-      setTimeout(() => {
-        setFormData({ name: '', email: '', message: '' });
-        setSubmitted(false);
-        generateCaptcha();
-      }, 3000);
-    }, 2000);
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        setIsSubmitting(false);
+        setSubmitted(true);
+        toast({
+          title: "Message Sent!",
+          description: data.message || "Thank you for reaching out. I'll get back to you soon.",
+        });
+        
+        // Reset form
+        setTimeout(() => {
+          setFormData({ name: '', email: '', message: '' });
+          setSubmitted(false);
+          generateCaptcha();
+        }, 3000);
+      } else {
+        throw new Error(data.message || 'Failed to send message');
+      }
+    } catch (error) {
+      setIsSubmitting(false);
+      toast({
+        title: "Error",
+        description: "Failed to send message. Please try again.",
+        variant: "destructive"
+      });
+      console.error('Contact form error:', error);
+    }
   };
 
   const handleChange = (e) => {
