@@ -19,6 +19,12 @@ const HomePage = () => {
   const [displayedText, setDisplayedText] = useState('');
   const [currentStatIndex, setCurrentStatIndex] = useState(0);
   const fullText = personalInfo.title;
+  const location = useLocation();
+
+  // Track page view on mount and route change
+  useEffect(() => {
+    trackPageView(location.pathname);
+  }, [location]);
 
   useEffect(() => {
     let currentIndex = 0;
@@ -32,7 +38,7 @@ const HomePage = () => {
     }, 100);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [fullText]);
 
   // Animated counter for stats
   useEffect(() => {
