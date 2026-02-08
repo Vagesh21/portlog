@@ -219,16 +219,6 @@ const InteractiveAvatar = () => {
           fill="none"
         />
       </svg>
-      
-      {/* Emotion indicator */}
-      <motion.div
-        className="emotion-badge"
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5 }}
-      >
-        <span className="text-xs text-[#00d4ff] font-mono capitalize">{emotion}</span>
-      </motion.div>
     </motion.div>
   );
 };
