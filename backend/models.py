@@ -66,6 +66,9 @@ class RecentVisitor(BaseModel):
     timestamp: str
     page: str
     device: str
+    browser: Optional[str] = None
+    os: Optional[str] = None
+    location: Optional[str] = None
 
 class AnalyticsStats(BaseModel):
     total_visits: int
