@@ -69,6 +69,54 @@ A modern, interactive portfolio website designed for cybersecurity professionals
 
 ## 🚀 Installation
 
+### Quick Start
+
+**Choose your preferred method:**
+
+1. **🐳 Docker (Recommended)** - Fastest and easiest
+   ```bash
+   docker-compose up -d
+   ```
+   See [DOCKER.md](./DOCKER.md) for complete guide
+
+2. **🥧 Raspberry Pi 4 Setup** - Automated script
+   ```bash
+   sudo bash setup-raspi.sh
+   ```
+   Installs all dependencies automatically
+
+3. **💻 Manual Installation** - Full control
+   Follow the detailed steps below
+
+### Docker Installation (Recommended)
+
+See **[DOCKER.md](./DOCKER.md)** for complete Docker setup guide.
+
+```bash
+# Clone repository
+git clone https://github.com/yourusername/cybersecurity-portfolio.git
+cd cybersecurity-portfolio
+
+# Start with Docker
+docker-compose up -d
+
+# Access at http://localhost:3000
+```
+
+### Raspberry Pi 4 Setup (Kali Linux)
+
+```bash
+# Run automated setup
+sudo bash setup-raspi.sh
+
+# Then start with Docker
+docker-compose up -d
+
+# Or start manually (see below)
+```
+
+### Manual Installation
+
 ### 1. Clone the Repository
 ```bash
 git clone https://github.com/yourusername/cybersecurity-portfolio.git
