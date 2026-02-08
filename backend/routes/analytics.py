@@ -37,6 +37,53 @@ def parse_user_agent(user_agent: str) -> str:
     else:
         return 'desktop'
 
+def parse_browser(user_agent: str) -> str:
+    """
+    Parse user agent to determine browser
+    """
+    ua = user_agent.lower()
+    if 'edg' in ua:
+        return 'Edge'
+    elif 'chrome' in ua and 'edg' not in ua:
+        return 'Chrome'
+    elif 'firefox' in ua:
+        return 'Firefox'
+    elif 'safari' in ua and 'chrome' not in ua:
+        return 'Safari'
+    elif 'opera' in ua or 'opr' in ua:
+        return 'Opera'
+    else:
+        return 'Other'
+
+def parse_os(user_agent: str) -> str:
+    """
+    Parse user agent to determine operating system
+    """
+    ua = user_agent.lower()
+    if 'windows' in ua:
+        return 'Windows'
+    elif 'mac' in ua and 'iphone' not in ua and 'ipad' not in ua:
+        return 'macOS'
+    elif 'linux' in ua and 'android' not in ua:
+        return 'Linux'
+    elif 'android' in ua:
+        return 'Android'
+    elif 'iphone' in ua or 'ipad' in ua:
+        return 'iOS'
+    else:
+        return 'Other'
+
+def get_location_from_ip(ip_address: str) -> str:
+    """
+    Get approximate location from IP address
+    Note: This is a basic implementation. For production, use a service like ipapi.co
+    """
+    # For local IPs
+    if ip_address.startswith('127.') or ip_address.startswith('192.168.') or ip_address.startswith('10.'):
+        return 'Local Network'
+    # For this demo, return placeholder
+    return 'Unknown'
+
 @router.post("/track", response_model=TrackingResponse)
 async def track_event(event_data: AnalyticsEventCreate, request: Request):
     """
