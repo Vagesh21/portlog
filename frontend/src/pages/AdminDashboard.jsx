@@ -43,45 +43,40 @@ const AdminDashboard = () => {
   const [deviceStats, setDeviceStats] = useState([]);
 
   useEffect(() => {
-    // Mock data - will be fetched from backend
-    setStats({
-      totalVisits: 1247,
-      totalClicks: 3891,
-      uniqueVisitors: 892,
-      avgSessionTime: '3m 42s'
-    });
+    // Fetch real analytics data from backend
+    const fetchAnalytics = async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/analytics/stats?time_range=7d`);
+        const data = await response.json();
+        
+        setStats({
+          totalVisits: data.total_visits,
+          totalClicks: data.total_clicks,
+          uniqueVisitors: data.unique_visitors,
+          avgSessionTime: data.avg_session_time
+        });
+        
+        setVisitData(data.visit_data || []);
+        setRecentVisitors(data.recent_visitors || []);
+        setPageViews(data.page_views || []);
+        setDeviceStats(data.device_stats || []);
+      } catch (error) {
+        console.error('Error fetching analytics:', error);
+        // Keep mock data if API fails
+        setStats({
+          totalVisits: 0,
+          totalClicks: 0,
+          uniqueVisitors: 0,
+          avgSessionTime: '0m 0s'
+        });
+      }
+    };
 
-    setVisitData([
-      { date: 'Mon', visits: 45, clicks: 120 },
-      { date: 'Tue', visits: 52, clicks: 150 },
-      { date: 'Wed', visits: 38, clicks: 95 },
-      { date: 'Thu', visits: 67, clicks: 180 },
-      { date: 'Fri', visits: 71, clicks: 210 },
-      { date: 'Sat', visits: 43, clicks: 130 },
-      { date: 'Sun', visits: 55, clicks: 165 }
-    ]);
-
-    setRecentVisitors([
-      { ip: '203.45.67.89', timestamp: '2 mins ago', page: '/projects', device: 'Desktop' },
-      { ip: '192.168.1.105', timestamp: '5 mins ago', page: '/contact', device: 'Mobile' },
-      { ip: '104.23.45.167', timestamp: '8 mins ago', page: '/certifications', device: 'Tablet' },
-      { ip: '75.89.123.45', timestamp: '12 mins ago', page: '/', device: 'Desktop' },
-      { ip: '88.56.234.12', timestamp: '15 mins ago', page: '/projects', device: 'Mobile' }
-    ]);
-
-    setPageViews([
-      { page: 'Home', views: 420 },
-      { page: 'Projects', views: 280 },
-      { page: 'Certifications', views: 195 },
-      { page: 'Contact', views: 145 },
-      { page: 'About', views: 207 }
-    ]);
-
-    setDeviceStats([
-      { name: 'Desktop', value: 55 },
-      { name: 'Mobile', value: 32 },
-      { name: 'Tablet', value: 13 }
-    ]);
+    fetchAnalytics();
+    
+    // Auto-refresh every 30 seconds
+    const interval = setInterval(fetchAnalytics, 30000);
+    return () => clearInterval(interval);
   }, []);
 
   const COLORS = ['#00d4ff', '#10b981', '#f59e0b'];
