@@ -22,7 +22,7 @@ client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ.get('DB_NAME', 'portfolio_db')]
 
 # Create the main app without a prefix
-app = FastAPI()
+app = FastAPI(title="Vagesh Anagani Portfolio API", version="1.0.0")
 
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
