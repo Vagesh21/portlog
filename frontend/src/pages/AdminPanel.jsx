@@ -10,7 +10,9 @@ import {
   Trash2,
   Plus,
   RefreshCw,
-  ArrowLeft
+  ArrowLeft,
+  LogOut,
+  Key
 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { Card } from '../components/ui/card';
