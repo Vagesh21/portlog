@@ -37,6 +37,9 @@ class AnalyticsEvent(BaseModel):
     ip_address: str
     user_agent: str
     device_type: str
+    browser: Optional[str] = None
+    os: Optional[str] = None
+    location: Optional[str] = None
     timestamp: datetime = Field(default_factory=datetime.utcnow)
     session_id: Optional[str] = None
 
