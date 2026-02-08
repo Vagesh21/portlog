@@ -246,14 +246,32 @@ const AdminPanel = () => {
               </h1>
               <p className="text-[#9ca3af]">Manage your portfolio content and analytics</p>
             </div>
-            <Button 
-              onClick={() => navigate('/')}
-              variant="ghost"
-              className="text-[#9ca3af] hover:text-[#00d4ff]"
-            >
-              <ArrowLeft size={20} className="mr-2" />
-              Back to Site
-            </Button>
+            <div className="flex items-center gap-3">
+              <Button 
+                onClick={() => setShowPasswordDialog(true)}
+                variant="ghost"
+                className="text-[#9ca3af] hover:text-[#00d4ff] border border-[#2a3150] hover:border-[#00d4ff]"
+              >
+                <Key size={20} className="mr-2" />
+                Change Password
+              </Button>
+              <Button 
+                onClick={() => navigate('/')}
+                variant="ghost"
+                className="text-[#9ca3af] hover:text-[#00d4ff]"
+              >
+                <ArrowLeft size={20} className="mr-2" />
+                Back to Site
+              </Button>
+              <Button 
+                onClick={handleLogout}
+                variant="ghost"
+                className="text-[#ef4444] hover:text-[#dc2626] hover:bg-[#ef4444]/10"
+              >
+                <LogOut size={20} className="mr-2" />
+                Logout
+              </Button>
+            </div>
           </div>
         </motion.div>
 
