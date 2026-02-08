@@ -193,21 +193,33 @@ const AdminPanel = () => {
         </motion.div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-4 bg-[#1a1f3a]/50 border border-[#2a3150] mb-8">
-            <TabsTrigger value="analytics" className="data-[state=active]:bg-[#00d4ff]/20 data-[state=active]:text-[#00d4ff]">
+          <TabsList className="grid w-full grid-cols-4 bg-[#1a1f3a]/50 border border-[#2a3150] mb-8 p-1">
+            <TabsTrigger 
+              value="analytics" 
+              className="data-[state=active]:bg-[#00d4ff]/20 data-[state=active]:text-[#00d4ff] rounded-md transition-all"
+            >
               <BarChart3 size={16} className="mr-2" />
               Analytics
             </TabsTrigger>
-            <TabsTrigger value="messages" className="data-[state=active]:bg-[#00d4ff]/20 data-[state=active]:text-[#00d4ff]">
+            <TabsTrigger 
+              value="messages" 
+              className="data-[state=active]:bg-[#00d4ff]/20 data-[state=active]:text-[#00d4ff] rounded-md transition-all"
+            >
               <Mail size={16} className="mr-2" />
               Messages
             </TabsTrigger>
-            <TabsTrigger value="content" className="data-[state=active]:bg-[#00d4ff]/20 data-[state=active]:text-[#00d4ff]">
+            <TabsTrigger 
+              value="content" 
+              className="data-[state=active]:bg-[#00d4ff]/20 data-[state=active]:text-[#00d4ff] rounded-md transition-all"
+            >
               <Edit size={16} className="mr-2" />
               Content
             </TabsTrigger>
-            <TabsTrigger value="settings" className="data-[state=active]:bg-[#00d4ff]/20 data-[state=active]:text-[#00d4ff]">
-              <Settings size={16} className="mr-2" />
+            <TabsTrigger 
+              value="settings" 
+              className="data-[state=active]:bg-[#00d4ff]/20 data-[state=active]:text-[#00d4ff] rounded-md transition-all"
+            >
+              <SettingsIcon size={16} className="mr-2" />
               Settings
             </TabsTrigger>
           </TabsList>
