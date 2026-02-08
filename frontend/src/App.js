@@ -11,7 +11,7 @@ import ProjectDashboard from './components/ProjectDashboard';
 import ThreatMap from './components/ThreatMap';
 import CertificationGallery from './components/CertificationGallery';
 import ContactForm from './components/ContactForm';
-import AdminDashboard from './pages/AdminDashboard';
+import AdminPanel from './pages/AdminPanel';
 import { Toaster } from './components/ui/toaster';
 import { personalInfo, stats, experience, education } from './data/mockData';
 import { trackPageView } from './utils/analytics';
