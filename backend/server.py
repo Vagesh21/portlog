@@ -72,6 +72,7 @@ async def get_status_checks():
 api_router.include_router(contact.router)
 api_router.include_router(analytics.router)
 api_router.include_router(content.router)
+api_router.include_router(auth.router)
 
 # Include the router in the main app
 app.include_router(api_router)
