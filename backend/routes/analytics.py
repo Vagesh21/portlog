@@ -94,6 +94,9 @@ async def track_event(event_data: AnalyticsEventCreate, request: Request):
         client_ip = request.client.host
         user_agent = request.headers.get("user-agent", "Unknown")
         device_type = parse_user_agent(user_agent)
+        browser = parse_browser(user_agent)
+        os = parse_os(user_agent)
+        location = get_location_from_ip(client_ip)
         
         # Create event
         event = AnalyticsEvent(
@@ -101,7 +104,10 @@ async def track_event(event_data: AnalyticsEventCreate, request: Request):
             page=event_data.page,
             ip_address=client_ip,
             user_agent=user_agent,
-            device_type=device_type
+            device_type=device_type,
+            browser=browser,
+            os=os,
+            location=location
         )
         
         # Save to database
