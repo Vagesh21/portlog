@@ -565,6 +565,7 @@ const AdminPanel = () => {
             </div>
           </TabsContent>
 
+          {/* Settings Tab */}
           <TabsContent value="settings">
             <Card className="bg-[#1a1f3a]/50 border-[#2a3150] p-6">
               <h2 className="text-2xl font-bold text-[#e5e7eb] mb-6">Website Settings</h2>
