@@ -47,11 +47,54 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
 const AdminPanel = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('analytics');
   const [contactMessages, setContactMessages] = useState([]);
   const [projects, setProjects] = useState([]);
   const [skills, setSkills] = useState([]);
   const [settings, setSettings] = useState({});
+  
+  // Analytics states
+  const [stats, setStats] = useState({
+    totalVisits: 0,
+    totalClicks: 0,
+    uniqueVisitors: 0,
+    avgSessionTime: '0m 0s'
+  });
+  const [visitData, setVisitData] = useState([]);
+  const [recentVisitors, setRecentVisitors] = useState([]);
+  const [pageViews, setPageViews] = useState([]);
+  const [deviceStats, setDeviceStats] = useState([]);
+
+  // Fetch analytics data
+  useEffect(() => {
+    const fetchAnalytics = async () => {
+      try {
+        const response = await fetch(`${API}/analytics/stats?time_range=7d`);
+        const data = await response.json();
+        
+        setStats({
+          totalVisits: data.total_visits,
+          totalClicks: data.total_clicks,
+          uniqueVisitors: data.unique_visitors,
+          avgSessionTime: data.avg_session_time
+        });
+        
+        setVisitData(data.visit_data || []);
+        setRecentVisitors(data.recent_visitors || []);
+        setPageViews(data.page_views || []);
+        setDeviceStats(data.device_stats || []);
+      } catch (error) {
+        console.error('Error fetching analytics:', error);
+      }
+    };
+
+    if (activeTab === 'analytics') {
+      fetchAnalytics();
+      const interval = setInterval(fetchAnalytics, 30000);
+      return () => clearInterval(interval);
+    }
+  }, [activeTab]);
 
   // Fetch contact messages
   const fetchContactMessages = async () => {
