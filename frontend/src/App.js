@@ -337,6 +337,7 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
+        <AnalyticsTracker />
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/admin-analytics-dashboard" element={<AdminDashboard />} />
@@ -344,6 +345,17 @@ function App() {
       </BrowserRouter>
     </div>
   );
+}
+
+// Component to track route changes
+function AnalyticsTracker() {
+  const location = useLocation();
+  
+  useEffect(() => {
+    trackPageView(location.pathname);
+  }, [location]);
+  
+  return null;
 }
 
 export default App;
