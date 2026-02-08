@@ -534,6 +534,58 @@ npm test
 
 ## 🛠️ Troubleshooting
 
+## 🛠️ Troubleshooting
+
+### Quick Fixes
+
+**Problem: Analytics not showing visitors**
+- See **[TROUBLESHOOTING.md](./TROUBLESHOOTING.md)** for complete guide
+- Quick fix: `sudo supervisorctl restart all` or `docker-compose restart`
+
+**Problem: Port already in use**
+```bash
+# Find and kill process
+sudo lsof -i :3000
+sudo kill -9 <PID>
+```
+
+**Problem: MongoDB connection failed**
+```bash
+# Check MongoDB status
+sudo systemctl status mongodb
+sudo systemctl start mongodb
+
+# Or with Docker
+docker-compose logs mongodb
+docker-compose restart mongodb
+```
+
+**Problem: Frontend not loading**
+```bash
+# Clear cache and restart
+rm -rf node_modules/.cache
+yarn start
+
+# Or with Docker
+docker-compose restart frontend
+```
+
+**Problem: Backend errors**
+```bash
+# Check logs
+tail -f /var/log/supervisor/backend.err.log
+
+# Or with Docker  
+docker-compose logs backend
+
+# Restart backend
+sudo supervisorctl restart backend
+```
+
+For more detailed troubleshooting, see:
+- **[TROUBLESHOOTING.md](./TROUBLESHOOTING.md)** - Analytics and general issues
+- **[DOCKER.md](./DOCKER.md)** - Docker-specific problems
+
 ### Frontend Not Loading
 ```bash
 # Check if backend is running
