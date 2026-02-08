@@ -1,0 +1,26 @@
+.interactive-avatar-container {
+  position: relative;
+  display: inline-block;
+}
+
+.avatar-svg {
+  filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.3));
+  transition: filter 0.3s ease;
+}
+
+.interactive-avatar-container:hover .avatar-svg {
+  filter: drop-shadow(0 0 30px rgba(0, 212, 255, 0.5));
+}
+
+.emotion-badge {
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(26, 31, 58, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  border-radius: 12px;
+  padding: 4px 12px;
+  white-space: nowrap;
+}
