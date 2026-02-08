@@ -12,6 +12,8 @@ import ThreatMap from './components/ThreatMap';
 import CertificationGallery from './components/CertificationGallery';
 import ContactForm from './components/ContactForm';
 import AdminPanel from './pages/AdminPanel';
+import LoginPage from './pages/LoginPage';
+import ProtectedRoute from './components/ProtectedRoute';
 import { Toaster } from './components/ui/toaster';
 import { personalInfo, stats, experience, education } from './data/mockData';
 import { trackPageView } from './utils/analytics';
